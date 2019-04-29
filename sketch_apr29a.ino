@@ -13,6 +13,7 @@ char user_input;
 int stepCount = 0; //for debugging and positioning
 int x=0;
 int direction = 0;
+int val;
 
 ////Interupt functions
 //volatile uint8_t triggerState=0; //need this to switch pin commands
@@ -45,37 +46,32 @@ void loop() {
          stepCount = 0;
          reverse();
       }
-//      if (user_input =='2')
-//      {
-//         stepCount = 0;
-//         forward();
-//      }
-      // THIS IS WHAT WE'RE WORKING ON, CALIBRATION
       if (user_input =='2')
+      {
+         stepCount = 0;
+         forward();
+      }
+      // THIS IS WHAT WE'RE WORKING ON, CALIBRATION
+      if (user_input =='3')
       {
          stepCount = 0;
          calibration();
       }
-//      else
-//      {
-//        Serial.println("Invalid option entered.");
-//      }
+      else
+      {
+        Serial.println("Enter 1,2, or 3");
+      }
       resetEDPins();
   }
-  // put your main code here, to run repeatedly:
-
 }
+// put your main code here, to run repeatedly:
 ////////////////////////////////////////////////////////////////////
 void reverse(){
-  Serial.println("Moving back ");
+  Serial.println("Moving forward XXX steps at full step step mode.");
   digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
-  digitalWrite(MS1, HIGH); //Pull MS1, and MS2 high to set logic to 1/8th microstep resolution
-  digitalWrite(MS2, HIGH);
-  //stepCount = 0;
-//  while(triggerState == 0 && stepCount<3000){  
+ stepCount = 0;
   for (x= 0; x<200 ; x++){
     direction = 2;
-    //analogWrite(stp, 128);
     digitalWrite(stp,HIGH); //Trigger one step forward
     stepCount++;
     Serial.println(x);
@@ -86,11 +82,9 @@ void reverse(){
 }
 
 void calibration(){
-  int val;
-
   while (val > 10){
   val = analogRead(rupt);
-  digitalWrite(dir, HIGH); //Pull direction pin high
+  digitalWrite(dir, LOW); //Pull direction pin Low
   direction = 2;
     digitalWrite(stp,HIGH); //Trigger one step forward
     delay(2.5);
@@ -103,11 +97,13 @@ void calibration(){
 }
 
 void forward(){
-  Serial.println("Moving forward 250 steps at full step mode.");
+  Serial.println("Moving forward XXX steps at 1/8th step mode.");
   digitalWrite(dir, LOW); //
-  digitalWrite(MS1, HIGH); //
+  //set step mode to 
+  digitalWrite(MS1, HIGH);
   digitalWrite(MS2, HIGH);
-  stepCount = 0;
+  
+  stepCount = 0; //step counter for debugging 
   for (x= 0; x< 400; x++){
     direction = 2;
     digitalWrite(stp,HIGH); //Trigger one step forward
@@ -118,7 +114,6 @@ void forward(){
     delay(2.5);
   }
   resetEDPins();
-//  stepForward();
 }
 
 void resetEDPins(){
