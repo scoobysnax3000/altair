@@ -1,18 +1,23 @@
+#include <PinChangeInterrupt.h>
+
 //Define motor driver pins
-#define stp 2
-#define dir 3
+#define stp 3
+#define dir 2
 #define MS1 4
 #define MS2 5
 #define EN  6
 
-int rupt = 2;
+//Define Global Vars
+int rupt = 2; //defining photogate analog pin
 char user_input;
-int stepCount = 0;
+int stepCount = 0; //for debugging and positioning
 int x=0;
 int direction = 0;
 
-void setup() {
-  // put your setup code here, to run once:
+////Interupt functions
+//volatile uint8_t triggerState=0; //need this to switch pin commands
+
+void setup() { //this code runs only once, no functions here
 Serial.begin(9600);
 Serial.println("Begin motor control");
   Serial.println();
@@ -22,6 +27,13 @@ Serial.println("Begin motor control");
   Serial.println("2. Reverse at 1/8th microstep mode");
   Serial.println("3. Return to calibration point");
   Serial.println();
+
+  //Set pin modes for the motor and interupt pins
+  pinMode(stp, OUTPUT);
+  pinMode(dir, OUTPUT);
+  pinMode(MS1, OUTPUT);
+  pinMode(MS2, OUTPUT);
+  pinMode(EN, OUTPUT);
 }
 
 void loop() {
